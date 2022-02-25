@@ -1,6 +1,7 @@
 package com.gp.practice.azure.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -12,20 +13,25 @@ import com.azure.messaging.webpubsub.WebPubSubServiceClientBuilder;
 @Component
 public class WebPubSubConfig {
 
+	@Value("${pubsubendpoint}")
+	private String pubSubEndPoint;
+	@Value("${pubsub_hub_ovc}")
+	private String ovcHubName;
+	@Value("${pubsub_hub_notification}")
+	private String notificationHubName;
+
 	@Bean(name = "ovchubClient")
 	public WebPubSubServiceClient getWebPubSubServerClient() {
-		WebPubSubServiceClient client = new WebPubSubServiceClientBuilder().connectionString(
-				"Endpoint=https://rajwebpubsubdemo.webpubsub.azure.com;AccessKey=4W+BtG66BheERI6NGTT2vJV/UGkt/kWbnQIjNnEcXE8=;Version=1.0;")
-				.hub("ovc").buildClient();
+		WebPubSubServiceClient client = new WebPubSubServiceClientBuilder().connectionString(pubSubEndPoint)
+				.hub(ovcHubName).buildClient();
 		System.out.println("ovc hub client created.. " + client);
 		return client;
 	}
-	
+
 	@Bean(name = "notificationhubClient")
 	public WebPubSubServiceClient getWebPubSubServerNotificationClient() {
-		WebPubSubServiceClient client = new WebPubSubServiceClientBuilder().connectionString(
-				"Endpoint=https://rajwebpubsubdemo.webpubsub.azure.com;AccessKey=4W+BtG66BheERI6NGTT2vJV/UGkt/kWbnQIjNnEcXE8=;Version=1.0;")
-				.hub("notification").buildClient();
+		WebPubSubServiceClient client = new WebPubSubServiceClientBuilder().connectionString(pubSubEndPoint)
+				.hub(notificationHubName).buildClient();
 		System.out.println("notification hub client created.. " + client);
 		return client;
 	}
